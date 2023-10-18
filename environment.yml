@@ -1,0 +1,8 @@
+name: proj_prev_code
+channels:
+  - defaults
+dependencies:
+  - scipy
+  - matplotlib
+  - tensorflow[and-cuda]
+prefix: /home/pitangura/Code/Miniconda/envs/proj_prev_code
