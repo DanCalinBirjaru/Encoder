@@ -83,19 +83,18 @@ for i in np.arange(len(x_test)):
 
 # ----------------- MODELLING -----------------
 
-img_shape_ = [img_shape[0], img_shape[1], 1]#3] #apparently it wants a 3d shape but
-                                            # that might be for rgb which these
-                                            # are not
-print(img_shape_)
-inputs = keras.Input(shape = (img_shape_))
-conv1 = layers.Conv2D(32, kernel_size = (5, 5), strides = (1, 1), activation = "relu", input_shape = (img_shape_))(inputs)
-max1 = layers.MaxPooling2D(pool_size = (2, 2), strides = (2, 2))(conv1)
-conv2 = layers.Conv2D(64, (5, 5), activation = "relu")(max1)
-max2 = layers.MaxPooling2D(pool_size = (2, 2))(conv2)
+img_shape_ = [img_shape[0], img_shape[1], 1]
+print(img_size)
+inputs = keras.Input(shape=(img_size))
+reshape1 = layers.Reshape((img_shape_))(inputs)
+conv1 = layers.Conv2D(32, kernel_size = (5,5), strides = (1,1), activation = 'relu', input_shape=((img_shape_)))(reshape1)
+max1 = layers.MaxPooling2D(pool_size=(2,2), strides=(2,2))(conv1)
+conv2 = layers.Conv2D(64, (5,5), activation = 'relu')(max1)
+max2 = layers.MaxPooling2D(pool_size=(2,2))(conv2)
 flat = layers.Flatten()(max2)
-den1 = layers.Dense(100, activation = "relu")(flat)
-decoded = layers.Dense(img_size, activation = "sigmoid")(den1)
-decoded = layers.Reshape((img_shape_))(decoded)
+den1 = layers.Dense(100, activation = 'relu')(flat)
+print(img_size)
+decoded = layers.Dense(img_size, activation='sigmoid')(den1)
 # This model maps an input to its reconstruction
 autoencoder = keras.Model(inputs, decoded)
 
@@ -125,11 +124,14 @@ history = autoencoder.fit(x_train, x_train,
 saved_model.save(autoencoder, "output/model.txt")
 
 # Saving loss
-with open("output/loss.txt", "wb") as file:
+with open("output/loss.txt", "w") as file:
     file.write("train\n")
-    file.write(history.history["loss"])
+    file.write(str(history.history["loss"]))
 
+    file.write("\n")
     file.write("\n")
 
     file.write("validation\n")
-    file.write(history.history["val_loss"])
+    file.write(str(history.history["val_loss"]))
+
+    file.close()
